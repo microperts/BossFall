@@ -68,7 +68,7 @@ public class LeaderBoardScript : MonoBehaviour
                         {
                             GameObject obj = Instantiate(cellPrefab);
                             obj.transform.SetParent(this.gameObject.transform, false);
-                            obj.transform.GetChild(0).GetComponent<Text>().text = tz.data[i].position + ".";
+                            obj.transform.GetChild(0).GetComponent<Text>().text = tz.data[i].position + 1 + ".";
                             obj.transform.GetChild(1).GetComponent<Text>().text = tz.data[i].user.username;
                             obj.transform.GetChild(2).GetComponent<Text>().text = tz.data[i].score.ToString();
                             i++;

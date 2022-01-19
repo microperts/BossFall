@@ -20,6 +20,7 @@ public class Turn : MonoBehaviour
     public static void OnIncrementScoreCallBack(int x)
     {
         OnIncrementInScore?.Invoke(x);
+        //x = 0; 
     }
 
     public static int Value
@@ -33,9 +34,13 @@ public class Turn : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    private void OnEnable()
     {
         OnIncrementInScore += Increment;
+    }
+    private void OnDisable()
+    {
+        OnIncrementInScore -= Increment;
     }
     public  void Increment(int value)
     {
