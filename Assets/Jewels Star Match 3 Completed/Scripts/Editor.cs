@@ -488,6 +488,7 @@ public class JewelController : MonoBehaviour
     {
         List<Vector2Int> dem = new List<Vector2Int>();
         for (int i = y - 1; i >= 0; i--)
+        //for (int i = 0; i < y; i++)
         {
             if (i >= 0)
             {

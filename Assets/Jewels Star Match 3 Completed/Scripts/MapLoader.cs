@@ -101,7 +101,7 @@ public class MapLoader : MonoBehaviour
 
         int randomLevel = selectedLevel;
 
-       //    randomLevel = 1;
+           //randomLevel = 1;
         
         RandomLevelTokenList = new List<int>();
 
@@ -113,11 +113,11 @@ public class MapLoader : MonoBehaviour
             RandomLevelTokenList.Add(3);  // pink
             RandomLevelTokenList.Add(11); // usdc
             RandomLevelTokenList.Add(10); // solana
-            
-                /*RandomLevelTokenList.Add(5);  // harmonape
-                RandomLevelTokenList.Add(6);  // harmony
-                RandomLevelTokenList.Add(9);  // rvrs
-                RandomLevelTokenList.Add(8);  // monster*/
+
+            //RandomLevelTokenList.Add(5);  // harmonape
+            //RandomLevelTokenList.Add(6);  // harmony
+            //RandomLevelTokenList.Add(9);  // rvrs
+            //RandomLevelTokenList.Add(8);  // monster
         }
         else if (randomLevel == 2)
         {

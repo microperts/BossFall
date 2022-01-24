@@ -390,15 +390,16 @@ public class Jewel : MonoBehaviour
         lowList.Clear();
 
         int newpos = y;
-        if (CellScript.map[x, y] % 10 == 4)
-            return indx;
+        //if (CellScript.map[x, y] % 10 == 4)
+        //    return indx;
         for (int i = y - 1; i >= 0; i--)
+        //for (int i = 0; i < y; i++)
         {
-            if (CellScript.map[x, i] % 10 == 4)
-            {
-                return newpos;
-            }
-            if (JewelSpawn.JewelList[x, i] == null && CellScript.map[x, i] > 0)
+            //if (CellScript.map[x, i] % 10 == 4)
+            //{
+            //    return newpos;
+            //}
+            if (JewelSpawn.JewelList[x, i] == null && CellScript.map[x, i] >= 0)
             {
                 newpos = i;
             }

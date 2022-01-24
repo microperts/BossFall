@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Supporter
 {
-    public Vector2Int[] result = new Vector2Int[2];
+    public Vector2Int[] cordinates = new Vector2Int[2];
     
     private int[,] _virtualJewelTypeMap;
     private Vector2Int _mapSize;
@@ -20,7 +20,7 @@ public class Supporter
             for (int y = 0; y < _mapSize.y; y++)
             {
                 GameObject tmp = JewelSpawn.JewelList[x, y];
-                if (tmp != null && CellScript.map[x, y] < 20)
+                if (tmp != null /*&& CellScript.map[x, y] < 20*/)
                 {
                     _virtualJewelTypeMap[x, y] = tmp.GetComponent<Jewel>().type;
                 }
@@ -47,27 +47,58 @@ public class Supporter
                     jewelPositions = CheckMatches(i, j);
                     if (jewelPositions[0].x != -1)
                     {
-                        result = jewelPositions;
+                        cordinates = jewelPositions;
                         goto mgoto;
                     }
                 }
+                else
+                {
+                    Debug.Log("Invalid Jewel Type"+"= "+ _virtualJewelTypeMap[i, j]+"at--> " + i + "," + j);
+                }
             }
         }
-        result = jewelPositions;
+        cordinates = jewelPositions;
         
     mgoto:
-        if (result[0].x != -1)
+        if (cordinates[0].x != -1)
         {
-            jewelObjects = ObjFinder(result);
+            jewelObjects = ObjFinder(cordinates);
             if (jewelObjects != null && jewelObjects[0] != null && jewelObjects[1] != null && MapLoader.gameStarted)
             {
                 var j1 = jewelObjects[0].GetComponent<Jewel>();
                 var j2 = jewelObjects[1].GetComponent<Jewel>();
-                if (j1.type != j2.type)
+                //if (j1.type != j2.type)
+                //{
+                //    Debug.Log("No Virtual Matches Found, Regenerating Board");
+                //}
+                string type1;
+                string type2;
+                if (j1.type == 0)
                 {
-                    Debug.Log("No Virtual Matches Found, Regenerating Board");
+                    type1 = "Bitcoin";
                 }
-                Debug.Log($"Found Virtual Match of {j1.type} at {j1.PosMap} and {j2.type} at {j2.PosMap}");
+                else if(j1.type == 1)
+                {
+                    type1 = "Bosscoin";
+                }
+                else
+                {
+                    type1 = "Cougar";
+                }
+
+                if (j2.type == 0)
+                {
+                    type2 = "Bitcoin";
+                }
+                else if (j2.type == 1)
+                {
+                    type2 = "Bosscoin";
+                }
+                else
+                {
+                    type2 = "Cougar";
+                }
+                Debug.Log($"Found Virtual Match of {type1} at {j1.PosMap} and {type2} at {j2.PosMap}");
             }
         }
         else
@@ -78,27 +109,29 @@ public class Supporter
         return jewelObjects;
     }
     
-    GameObject[] ObjFinder(Vector2Int[] v)
+    //function will return both Game Object Found in X,Y position of grid.
+    GameObject[] ObjFinder(Vector2Int[] cordinates)
     {
-        GameObject[] tmp = new GameObject[2];
-        tmp[0] = JewelSpawn.JewelList[v[0].x, v[0].y];
-        tmp[1] = JewelSpawn.JewelList[v[1].x, v[1].y];
-        return tmp;
+        GameObject[] tokensFound = new GameObject[2];
+        tokensFound[0] = JewelSpawn.JewelList[cordinates[0].x, cordinates[0].y];
+        tokensFound[1] = JewelSpawn.JewelList[cordinates[1].x, cordinates[1].y];
+        return tokensFound;
 
     }
 
-    void setDefaut()
-    {
-        for (int i = 0; i < _mapSize.x; i++)
-            for (int j = 0; j < _mapSize.y; j++)
-                _virtualJewelTypeMap[i, j] = -1;
-    }
+    //void setDefaut()
+    //{
+    //    for (int i = 0; i < _mapSize.x; i++)
+    //        for (int j = 0; j < _mapSize.y; j++)
+    //            _virtualJewelTypeMap[i, j] = -1;
+    //}
 
     Vector2Int[] CheckMatches(int x, int y)
     {
         Vector2Int[] matchPositions = new Vector2Int[2];
         matchPositions[0] = new Vector2Int(-1, -1);
         matchPositions[1] = new Vector2Int(-1, -1);
+
         var sameType = GetSameTypeInVicinity(x, y);
 
         if (sameType.Count <= 0) { return matchPositions; }
@@ -114,11 +147,11 @@ public class Supporter
                 return matchPositions;
         }
 
-        matchPositions = JumpChecker(x, y);
-        if (matchPositions[0].x != -1)
-        {
-            return matchPositions;
-        }
+        //matchPositions = JumpChecker(x, y);
+        //if (matchPositions[0].x != -1)
+        //{
+        //    return matchPositions;
+        //}
 
         return matchPositions;
     }
@@ -130,22 +163,22 @@ public class Supporter
         tmp[0] = new Vector2Int(-1, -1);
         tmp[1] = new Vector2Int(-1, -1);
 
-        if (_virtualJewelTypeMap[x, y] == _mapSize.y)
-        {
-            if (y + 1 < _mapSize.y && _virtualJewelTypeMap[x, y + 1] >= 0)
-            {
-                tmp[0] = new Vector2Int(x, y);
-                tmp[1] = new Vector2Int(x, y + 1);
-                return tmp;
-            }
+        //if (_virtualJewelTypeMap[x, y] == _mapSize.y)
+        //{
+        //    if (y + 1 < _mapSize.y && _virtualJewelTypeMap[x, y + 1] >= 0)
+        //    {
+        //        tmp[0] = new Vector2Int(x, y);
+        //        tmp[1] = new Vector2Int(x, y + 1);
+        //        return tmp;
+        //    }
 
-            if (y - 1 >= 0 && _virtualJewelTypeMap[x, y - 1] >= 0)
-            {
-                tmp[0] = new Vector2Int(x, y);
-                tmp[1] = new Vector2Int(x, y - 1);
-                return tmp;
-            }
-        }
+        //    if (y - 1 >= 0 && _virtualJewelTypeMap[x, y - 1] >= 0)
+        //    {
+        //        tmp[0] = new Vector2Int(x, y);
+        //        tmp[1] = new Vector2Int(x, y - 1);
+        //        return tmp;
+        //    }
+        //}
 
 
         if (v.y > y && y + 2 < _mapSize.y && _virtualJewelTypeMap[x, y + 2] >= 0)
@@ -200,30 +233,30 @@ public class Supporter
 
     }
 
-    Vector2Int[] YChecker(Vector2 v, int x, int y)
+    Vector2Int[] YChecker(Vector2Int v, int x, int y)
     {
         Vector2Int[] tmp = new Vector2Int[2];
         tmp[0] = new Vector2Int(-1, -1);
         tmp[1] = new Vector2Int(-1, -1);
 
-        if (_virtualJewelTypeMap[x, y] == _mapSize.y)
-        {
-            if (x + 1 < _mapSize.x && _virtualJewelTypeMap[x + 1, y] >= 0)
-            {
-                tmp[0] = new Vector2Int(x, y);
-                tmp[1] = new Vector2Int(x + 1, y);
-                return tmp;
-            }
+        //if (_virtualJewelTypeMap[x, y] == _mapSize.y)
+        //{
+        //    if (x + 1 < _mapSize.x && _virtualJewelTypeMap[x + 1, y] >= 0)
+        //    {
+        //        tmp[0] = new Vector2Int(x, y);
+        //        tmp[1] = new Vector2Int(x + 1, y);
+        //        return tmp;
+        //    }
 
-            if (x - 1 >= 0 && _virtualJewelTypeMap[x - 1, y] >= 0)
-            {
-                tmp[0] = new Vector2Int(x, y);
-                tmp[1] = new Vector2Int(x - 1, y);
-                return tmp;
-            }
-        }
+        //    if (x - 1 >= 0 && _virtualJewelTypeMap[x - 1, y] >= 0)
+        //    {
+        //        tmp[0] = new Vector2Int(x, y);
+        //        tmp[1] = new Vector2Int(x - 1, y);
+        //        return tmp;
+        //    }
+        //}
 
-        if ((int)v.x > x && x + 2 < _mapSize.x && _virtualJewelTypeMap[x + 2, y] >= 0)
+        if (v.x > x && x + 2 < _mapSize.x && _virtualJewelTypeMap[x + 2, y] >= 0)
         {
             if (y - 1 >= 0 && _virtualJewelTypeMap[x + 2, y - 1] == _virtualJewelTypeMap[x, y])
             {
@@ -246,7 +279,7 @@ public class Supporter
                 return tmp;
             }
         }
-        else if ((int)v.x < x && x - 2 >= 0 && _virtualJewelTypeMap[x - 2, y] >= 0)
+        else if (v.x < x && x - 2 >= 0 && _virtualJewelTypeMap[x - 2, y] >= 0)
         {
             if (y - 1 >= 0 && _virtualJewelTypeMap[x - 2, y - 1] == _virtualJewelTypeMap[x, y])
             {
@@ -282,14 +315,14 @@ public class Supporter
         matchPositions[2] = new Vector2Int(x, y - 1);
         matchPositions[3] = new Vector2Int(x, y + 1);
 
-        if (_virtualJewelTypeMap[x, y] == _mapSize.y)
-        {
-            for (int i = 0; i < 4; i++)
-                if (matchPositions[i].x >= 0 && matchPositions[i].y >= 0)
-                    if (matchPositions[i].x < _mapSize.x && matchPositions[i].y < _mapSize.y)
-                        matchList.Add(matchPositions[i]);
-            return matchList;
-        }
+        //if (_virtualJewelTypeMap[x, y] == _mapSize.y)
+        //{
+        //    for (int i = 0; i < 4; i++)
+        //        if (matchPositions[i].x >= 0 && matchPositions[i].y >= 0)
+        //            if (matchPositions[i].x < _mapSize.x && matchPositions[i].y < _mapSize.y)
+        //                matchList.Add(matchPositions[i]);
+        //    return matchList;
+        //}
         
         for (int i = 0; i < 4; i++)
             if (matchPositions[i].x >= 0 && matchPositions[i].y >= 0)

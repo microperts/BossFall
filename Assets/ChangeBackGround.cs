@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 public class ChangeBackGround : MonoBehaviour
 {
 
-    private Texture2D downloadedImage;
+    public static Texture2D downloadedImage;
     public Image background;
     // Start is called before the first frame update
     void Start()

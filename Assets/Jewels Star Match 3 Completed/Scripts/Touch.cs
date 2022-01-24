@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Touch : MonoBehaviour
 {
+    public static bool isRegenerating = false;
     public static int BackCount;
     GameObject Pointer;
     GameObject ObjPointer;
@@ -44,7 +45,9 @@ public class Touch : MonoBehaviour
         
         hintSupporter = new Supporter();
         Editor.down = false;
-       // supportTimeRp = 5f;
+        // supportTimeRp = 5f;
+        InvokeRepeating(nameof(HintTimeCountdown), 10.0f, 5.0f);
+
     }
     
     void Update()
@@ -136,13 +139,17 @@ public class Touch : MonoBehaviour
             PauseUI.SetActive(true);
             Time.timeScale = 0;
         }*/
-        HintTimeCountdown();
+        
     }
 
     void HintTimeCountdown()
     {
         if (!isMove)
         {
+            if (isRegenerating)
+            {
+                return;
+            }
             HintCheck();
         }
 
@@ -422,6 +429,7 @@ public class Touch : MonoBehaviour
 
     IEnumerator NoMoreMoves()
     {
+        isRegenerating = true;
         RemoveSelectEffect(JewelSelected);
         Editor.down = true;
         Menu.isRun = false;
@@ -431,6 +439,7 @@ public class Touch : MonoBehaviour
         yield return new WaitForSeconds(1f);
         Menu.isRun = true;
         Editor.down = false;
+        isRegenerating = false;
         /*if (MapLoader.Mode == 1)
         {
             Editor.down = true;

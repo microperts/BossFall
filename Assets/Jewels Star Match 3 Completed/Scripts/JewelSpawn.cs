@@ -40,24 +40,25 @@ public class JewelSpawn : MonoBehaviour
 
     void StartGameSpawn(int[,] map)
     {
-        int sx = -1;
-        int sy = -1;
-        if (MapLoader.starwin != null)
-        {
-            sx = (int)MapLoader.starwin.GetComponent<Jewel>().PosMap.x;
-            sy = (int)MapLoader.starwin.GetComponent<Jewel>().PosMap.y;
-        }
+        //int sx = -1;
+        //int sy = -1;
+        //if (MapLoader.starwin != null)
+        //{
+        //    sx = (int)MapLoader.starwin.GetComponent<Jewel>().PosMap.x;
+        //    sy = (int)MapLoader.starwin.GetComponent<Jewel>().PosMap.y;
+        //}
 
         for (int x = 0; x < CellScript.Instance.Size.x; x++)
         {
             for (int y = CellScript.Instance.Size.y-1; y >= 0; y--)
+            //for (int y = 0; y < CellScript.Instance.Size.y; y++)
             {
-                if (map[x, y] > 0)
+                if (map[x, y] >= 0)
                 {
                     int rd = RandomJewel();
-                    if (sx != -1 && sx == x && sy == y)
-                        JewelPrefab.transform.Find("Render").GetComponent<SpriteRenderer>().sprite = null;
-                    else
+                    //if (sx != -1 && sx == x && sy == y)
+                    //    JewelPrefab.transform.Find("Render").GetComponent<SpriteRenderer>().sprite = null;
+                    //else
                         JewelPrefab.transform.Find("Render").GetComponent<SpriteRenderer>().sprite = JewelSprites[rd];
                     GameObject tmp = Instantiate(JewelPrefab) as GameObject;
                     tmp.transform.parent = parent.transform;
@@ -109,8 +110,12 @@ public class JewelSpawn : MonoBehaviour
         JewelList[x, y] = tmp;
         tmp.transform.parent = parent.transform;
         tmp.transform.localPosition = new Vector3(x, posX[x] + 11, -1);
+        if (rd == -1)
+        {
+            Debug.LogError("Invalid jewel type");
+        }
         tmp.GetComponent<Jewel>().type = rd;
-        int r = Random.Range(0, 100);
+        //int r = Random.Range(0, 100);
         /*if (r == 83 && MapLoader.Mode == 1)
         {
             Effect.SpawnClock(clock, tmp, new Vector3(0, 0, 0));
@@ -136,14 +141,14 @@ public class JewelSpawn : MonoBehaviour
             {
                 posX[i] = 0;
                 int start = 0;
-                for (int s = 0; s < CellScript.Instance.Size.y; s++)
-                    if (CellScript.map[i, s] % 10 == 4)
-                    {
-                        start = s;
-                    }
+                //for (int s = 0; s < CellScript.Instance.Size.y; s++)
+                //    if (CellScript.map[i, s] % 10 == 4)
+                //    {
+                //        start = s;
+                //    }
 
-                if (start == 0 && CellScript.map[i, 0] % 10 != 4)
-                    start = -1;
+                //if (start == 0 && CellScript.map[i, 0] % 10 != 4)
+                //    start = -1;
 
 
                 for (int j = start + 1; j < CellScript.Instance.Size.y; j++)

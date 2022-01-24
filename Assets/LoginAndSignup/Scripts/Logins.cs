@@ -21,6 +21,7 @@ public class Logins : MonoBehaviour
     public GameObject preConnection;
     public GameObject InputUserName;
     public GameObject postConnection;
+    public GameObject errorMsg;
     public InputField username;
     public GameObject LoadingScreen;
     public Text usernameText;
@@ -59,6 +60,7 @@ public class Logins : MonoBehaviour
             {
                 if (username.text.Contains(ch))
                 {
+                    errorMsg.SetActive(true);
                     return;
                 }
             }
@@ -66,6 +68,10 @@ public class Logins : MonoBehaviour
             InputUserName.SetActive(false);
             LoadingScreen.SetActive(true);
             StartCoroutine(GetItems());
+        }
+        else
+        {
+            errorMsg.SetActive(true);
         }
         
     }

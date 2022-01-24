@@ -12,8 +12,10 @@ using System.Text;
 
 public class LeaderBoardScript : MonoBehaviour
 {
+    public Scrollbar scrollbar;
+    public GameObject LoadingLeaderBoard;
     public GameObject cellPrefab;
-
+    public ScrollRect scroll;
     public Text UserCell_Position;
     public Text UserCell_Name;
     public Text UserCell_Score;
@@ -29,9 +31,12 @@ public class LeaderBoardScript : MonoBehaviour
         //    obj.transform.GetChild(1).GetComponent<Text>().text = "Mahad";
         //    obj.transform.GetChild(2).GetComponent<Text>().text = i.ToString();
         //}
+        LoadingLeaderBoard.SetActive(true);
         StartCoroutine(GetItems());
-    }
+        
 
+    }
+    
     private IEnumerator GetItems()
     {
         //ScoreBoard.text = null;
@@ -47,17 +52,18 @@ public class LeaderBoardScript : MonoBehaviour
                 case UnityWebRequest.Result.DataProcessingError:
                 case UnityWebRequest.Result.ProtocolError:
                     Debug.LogError("Error: " + webRequest.error);
+                    LoadingLeaderBoard.transform.GetChild(0).GetComponent<Text>().text = "Failed to Load Check Your Connection";
                     //loadingScreen.SetActive(false);
                     //ServerErrorMsg.SetActive(true);
                     break;
                 case UnityWebRequest.Result.Success:
                     Debug.Log("Received: " + webRequest.downloadHandler.text);
-
+                    
                     string responseJson = webRequest.downloadHandler.text;
                    API_response_storage tz = JsonUtility.FromJson<API_response_storage>(responseJson);
                    
                     UserCell_Name.text = tz.user.user.username;
-                    UserCell_Position.text = tz.user.position + ".";
+                    UserCell_Position.text = tz.user.position + 1 + ".";
                     UserCell_Score.text = tz.user.score.ToString();
                     
                     List<Datum> list = tz.data.ToList();
@@ -74,14 +80,19 @@ public class LeaderBoardScript : MonoBehaviour
                             i++;
                             
                         }
-                        //Debug.Log(tz.data.LeaderBoard[0].username + "   " + tz.data.LeaderBoard[0].score);
                         
+                        this.Invoke(()=> scroll.verticalScrollbar.value=1.0f,1.0f);
+                        this.Invoke(() => LoadingLeaderBoard.SetActive(false), 1.0f);
+                        //Debug.Log(tz.data.LeaderBoard[0].username + "   " + tz.data.LeaderBoard[0].score);
+                        //LoadingLeaderBoard.SetActive(false,1.0f);
                     }
+                    
                     else
                     {
+                        LoadingLeaderBoard.transform.GetChild(0).GetComponent<Text>().text = "No Player To Display";
                         //NoActiveEventMsg.SetActive(true);
                     }
-
+                    
                     //loadingScreen.SetActive(false);
                     break;
             }
